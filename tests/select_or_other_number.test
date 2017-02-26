@@ -3,25 +3,17 @@
 /**
  * Tests the select or other text field based functionality
  */
-class SelectOrOtherNumberTestCase extends DrupalWebTestCase {
+class SelectOrOtherNumberTestCase extends BackdropWebTestCase {
   protected $privileged_user;
   protected $field_options;
-
-  public static function getInfo() {
-    return array(
-      'name' => 'Select or Other number',
-      'description' => 'Ensure that Select or Other functions correctly while used in combination with list fields.',
-      'group' => 'Select or Other',
-    );
-  }
 
   public function setUp() {
     parent::setUp(array('text', 'select_or_other'));
     // Create and log in our privileged user.
-    $this->privileged_user = $this->drupalCreateUser(
+    $this->privileged_user = $this->backdropCreateUser(
       array('create page content', 'edit own page content')
     );
-    $this->drupalLogin($this->privileged_user);
+    $this->backdropLogin($this->privileged_user);
 
     // start with a clean slate.
     $this->field_options = array();
@@ -35,7 +27,7 @@ class SelectOrOtherNumberTestCase extends DrupalWebTestCase {
     $delta = 1;
     foreach (array('single', 'multiple') as $cardinality) {
       foreach ($field_types as $type) {
-        $field_name = drupal_strtolower($this->randomName());
+        $field_name = backdrop_strtolower($this->randomName());
         $field_settings = array(
           'type' => 'text',
           'field_name' => $field_name,
@@ -113,7 +105,7 @@ class SelectOrOtherNumberTestCase extends DrupalWebTestCase {
           }
 
           // Create the node.
-          $this->drupalPost('node/add/page', $edit, t('Save'));
+          $this->backdropPost('node/add/page', $edit, t('Save'));
 
           // Check if the values have been created.
           if ($cardinality === 'single') {
@@ -164,7 +156,7 @@ class SelectOrOtherNumberTestCase extends DrupalWebTestCase {
           $edit["{$field_name}[{$langcode}][other]"] = $other;
 
           // Create the node.
-          $this->drupalPost('node/add/page', $edit, t('Save'));
+          $this->backdropPost('node/add/page', $edit, t('Save'));
 
           // Check if the value has been created.
           // Add the </div> because assertRaw fails for integer values.
@@ -201,7 +193,7 @@ class SelectOrOtherNumberTestCase extends DrupalWebTestCase {
           $edit["{$field_name}[{$langcode}][other]"] = $key;
 
           // Create the node.
-          $this->drupalPost('node/add/page', $edit, t('Save'));
+          $this->backdropPost('node/add/page', $edit, t('Save'));
 
           // Check if the values have been created.
           // Add the </div> because assertRaw fails for integer values.

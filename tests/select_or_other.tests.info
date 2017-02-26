@@ -1,0 +1,17 @@
+[SelectOrOtherAdminTestCase]
+name = Select or Other admin
+description = Ensure that Select or Other administration functions as expected.
+group = Select or Other
+files = select_or_other_admin.test
+
+[SelectOrOtherNumberTestCase]
+name = Select or Other number
+description = Ensure that Select or Other functions correctly while used in combination with list fields.
+group = Select or Other
+files = select_or_other_number.test
+
+[SelectOrOtherTextTestCase]
+name = Select or Other Text
+description = Ensure that Select or Other functions correctly while used in combination with text fields.
+group = Select or Other
+files = select_or_other_text.test

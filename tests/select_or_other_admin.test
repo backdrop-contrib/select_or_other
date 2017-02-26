@@ -3,7 +3,7 @@
 /**
  * Tests administration of select or other field widgets and formatters.
  */
-class SelectOrOtherAdminTestCase extends DrupalWebTestCase {
+class SelectOrOtherAdminTestCase extends BackdropWebTestCase {
 
   /**
    * @var object
@@ -23,19 +23,10 @@ class SelectOrOtherAdminTestCase extends DrupalWebTestCase {
    */
   protected $instance;
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Select or Other admin',
-      'description' => 'Ensure that Select or Other administration functions as expected.',
-      'group' => 'Select or Other',
-    );
-  }
-
-
   public function setUp() {
     parent::setUp(array('field_ui', 'text', 'select_or_other'));
     // Create and log in our privileged user.
-    $this->adminUser = $this->drupalCreateUser(
+    $this->adminUser = $this->backdropCreateUser(
       array(
         'create page content',
         'edit own page content',
@@ -44,10 +35,10 @@ class SelectOrOtherAdminTestCase extends DrupalWebTestCase {
         'administer fields',
       )
     );
-    $this->drupalLogin($this->adminUser);
+    $this->backdropLogin($this->adminUser);
 
     $field = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'field_name' => backdrop_strtolower($this->randomName()),
       'type' => 'text',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
@@ -78,17 +69,17 @@ class SelectOrOtherAdminTestCase extends DrupalWebTestCase {
     $langcode = LANGUAGE_NONE;
     // Change field settings.
     $edit = array('instance[widget][settings][available_options]' => "keyed|Keyed\r\nunkeyed\r\n");
-    $this->drupalpost("admin/structure/types/manage/page/fields/{$this->field['field_name']}", $edit, t('Save settings'));
+    $this->backdroppost("admin/structure/types/manage/page/fields/{$this->field['field_name']}", $edit, t('Save settings'));
     // Change field display settings.
     $edit = array("fields[{$this->field['field_name']}][type]" => 'select_or_other_formatter');
-    $this->drupalpost("admin/structure/types/manage/page/display/", $edit, t('Save'));
+    $this->backdroppost("admin/structure/types/manage/page/display/default", $edit, t('Save'));
 
     // Create a node
     $edit = array(
       "title" => $this->randomName(8),
       "{$this->field['field_name']}[{$langcode}][select][]" => 'keyed',
     );
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->backdropPost('node/add/page', $edit, t('Save'));
 
     // Check if the values have been created.
     $this->assertRaw('Keyed');

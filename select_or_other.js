@@ -36,9 +36,9 @@
   }
 
   /**
-   * The Drupal behaviors for the Select (or other) field.
+   * The Backdrop behaviors for the Select (or other) field.
    */
-  Drupal.behaviors.select_or_other = {
+  Backdrop.behaviors.select_or_other = {
     attach: function(context) {
       jQuery(".select-or-other:not('.select-or-other-processed')", context)
         .addClass('select-or-other-processed')

@@ -3,7 +3,7 @@
 /**
  * Tests the select or other text field based functionality
  */
-class SelectOrOtherTextTestCase extends DrupalWebTestCase {
+class SelectOrOtherTextTestCase extends BackdropWebTestCase {
   protected $privileged_user;
   protected $single_field_name;
   protected $single_field;
@@ -12,34 +12,26 @@ class SelectOrOtherTextTestCase extends DrupalWebTestCase {
   protected $multi_field;
   protected $multi_instance;
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Select or Other Text',
-      'description' => 'Ensure that Select or Other functions correctly while used in combination with text fields.',
-      'group' => 'Select or Other',
-    );
-  }
-
   public function setUp() {
     parent::setUp(array('text', 'select_or_other'));
     // Create and log in our privileged user.
-    $this->privileged_user = $this->drupalCreateUser(
+    $this->privileged_user = $this->backdropCreateUser(
       array('create page content', 'edit own page content')
     );
-    $this->drupalLogin($this->privileged_user);
+    $this->backdropLogin($this->privileged_user);
 
     $field_defaults = array(
       'type' => 'text',
     );
 
-    $this->single_field_name = drupal_strtolower($this->randomName());
+    $this->single_field_name = backdrop_strtolower($this->randomName());
     $this->single_field = array(
         'field_name' => $this->single_field_name,
         'cardinality' => 1,
       ) + $field_defaults;
     field_create_field($this->single_field);
 
-    $this->multi_field_name = drupal_strtolower($this->randomName());
+    $this->multi_field_name = backdrop_strtolower($this->randomName());
     $this->multi_field = array(
         'field_name' => $this->multi_field_name,
         'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -93,7 +85,7 @@ class SelectOrOtherTextTestCase extends DrupalWebTestCase {
     // Test multiple select.
     $edit["{$this->multi_field_name}[{$langcode}][select][]"] = array('multi_keyed', 'multi_unkeyed');
     // Create the node.
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->backdropPost('node/add/page', $edit, t('Save'));
 
     // Check if the values have been created.
     $this->assertRaw('keyed');
@@ -111,7 +103,7 @@ class SelectOrOtherTextTestCase extends DrupalWebTestCase {
     $edit["{$this->multi_field_name}[{$langcode}][select][]"] = array('multi_keyed', 'select_or_other');
     $edit["{$this->multi_field_name}[{$langcode}][other]"] = $multi_other;
     // Create the node.
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->backdropPost('node/add/page', $edit, t('Save'));
 
     // Check if the values have been created.
     $this->assertRaw($single_other);
@@ -136,7 +128,7 @@ class SelectOrOtherTextTestCase extends DrupalWebTestCase {
     $edit["{$this->multi_field_name}[{$langcode}][select][]"] = array('multi_keyed', 'select_or_other');
     $edit["{$this->multi_field_name}[{$langcode}][other]"] = $multi_other;
     // Create the node.
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->backdropPost('node/add/page', $edit, t('Save'));
 
     // Check if the values have been created.
     $this->assertRaw($single_other);
@@ -160,7 +152,7 @@ class SelectOrOtherTextTestCase extends DrupalWebTestCase {
     $edit["{$this->multi_field_name}[{$langcode}][select][]"] = array('multi_keyed', 'select_or_other');
     $edit["{$this->multi_field_name}[{$langcode}][other]"] = 'multi_unkeyed';
     // Create the node.
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->backdropPost('node/add/page', $edit, t('Save'));
 
     // Check if the values have been created.
     $this->assertRaw('keyed');
@@ -170,7 +162,8 @@ class SelectOrOtherTextTestCase extends DrupalWebTestCase {
     $this->assertNoRaw('select_or_other');
 
     // Edit the node.
-    $this->drupalGet('node/1/edit');
+    $this->clickLink(t('Edit'));
+
     // Check if the other field is empty and if the select field has the correct
     // selected value.
     $this->assertFieldByName("{$this->single_field_name}[{$langcode}][other]", '');

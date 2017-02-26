@@ -12,7 +12,7 @@ function select_or_other_menu() {
   $items = array();
   $items['select-or-other-test-form'] = array(
     'title' => 'select_or_other test',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('select_or_other_test_form'),
     'access arguments' => array('access administration pages'),
     'type' => MENU_CALLBACK,
@@ -80,4 +80,3 @@ function select_or_other_test_form($form, $form_state) {
 function select_or_other_test_form_submit($form, &$form_state) {
   $form_state['storage'] = $form_state['values'];
 }
-

@@ -35,16 +35,6 @@ function select_or_other_field_widget_info() {
       'settings' => $settings,
       'weight' => 2,
     ),
-    'select_or_other_sort' => array(
-      'label' => t('Select (or other) drag and drop lists [deprecated in favor of Field Collection]'),
-      'field types' => $field_types,
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_DEFAULT,
-        'default value' => FIELD_BEHAVIOR_DEFAULT,
-      ),
-      'settings' => $settings,
-      'weight' => 2,
-    ),
     'select_or_other_buttons' => array(
       'label' => t('Select (or other) check boxes/radio buttons'),
       'field types' => $field_types,
@@ -122,8 +112,7 @@ function select_or_other_field_widget_form_prepare_options($field, $instance, $h
   }
 
   $required = (isset($instance['required']) && $instance['required']);
-  $multiple = (($instance['widget']['type'] == 'select_or_other' && $field['cardinality'] == -1)
-    || ($instance['widget']['type'] == 'select_or_other_sort'));
+  $multiple = ($instance['widget']['type'] == 'select_or_other' && $field['cardinality'] == -1);
   $multiple_checkbox = ($instance['widget']['type'] == 'select_or_other_buttons' && $field['cardinality'] == -1);
 
   $empty_option = array('_none' => theme('select_or_other_none', array('instance' => $instance)));
@@ -180,12 +169,6 @@ function select_or_other_field_widget_form(&$form, &$form_state, $field, $instan
   switch ($instance['widget']['type']) {
     case 'select_or_other':
       $element['#select_type'] = 'select';
-      break;
-
-    case 'select_or_other_sort':
-      $element['#select_type'] = 'select';
-      // Also disable multiples for this select type.
-      $element['#multiple'] = FALSE;
       break;
 
     case 'select_or_other_buttons':
@@ -270,11 +253,11 @@ function select_or_other_field_widget_settings_form($field, $instance) {
     '#required' => TRUE,
   );
   $form['other_size'] = array(
-    '#type' => 'textfield',
+    '#type' => 'number',
     '#title' => t('<em>Other</em> field size'),
     '#default_value' => $settings['other_size'],
     '#required' => TRUE,
-    '#element_validate' => array('element_validate_integer_positive'),
+    '#min' => 0,
   );
   $form['sort_options'] = array(
     '#type' => 'checkbox',
@@ -389,9 +372,6 @@ function select_or_other_field_widget_validate($element, &$form_state) {
         $values[$delta++]['value'] = $v;
       }
       $value = $values;
-    }
-    elseif ($element['#field_widget'] == 'select_or_other_sort') {
-      $value = array('value' => $value);
     }
 
     // Align with Drupal core select list, NULL (-None-) value.

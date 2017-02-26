@@ -13,6 +13,17 @@ module_load_include('inc', 'select_or_other', 'select_or_other.test_form');
 module_load_include('inc', 'select_or_other', 'select_or_other.field_widget');
 
 /**
+ * Implements hook_autoload_info()
+ */
+function select_or_other_autoload_info() {
+  return array(
+    'SelectOrOtherAdminTestCase' => 'tests/select_or_other_admin.test',
+    'SelectOrOtherNumberTestCase' => 'tests/select_or_other_number.test',
+    'SelectOrOtherTextTestCase' => 'tests/select_or_other_text.test',
+  );
+}
+
+/**
  * Implements hook_theme().
  */
 function select_or_other_theme() {
@@ -37,7 +48,7 @@ function theme_select_or_other($variables) {
   $element = $variables['element'];
 
   $output = "<div class=\"select-or-other\">\n";
-  $output .= drupal_render_children($element) . "\n";
+  $output .= backdrop_render_children($element) . "\n";
   $output .= "</div>\n";
   return $output;
 }
@@ -80,7 +91,7 @@ function select_or_other_element_process($element, &$form_state) {
   $element['#processed'] = TRUE;
 
   // Load the JS file to hide/show the 'other' box when needed.
-  $element['#attached']['js'][] = drupal_get_path('module', 'select_or_other') . '/select_or_other.js';
+  $element['#attached']['js'][] = backdrop_get_path('module', 'select_or_other') . '/select_or_other.js';
 
   // Create the main select box
   // Note that #title, #title_display, #default_value, #disabled, #multiple,
@@ -257,7 +268,6 @@ function theme_select_or_other_none($variables) {
       break;
 
     case 'select_or_other':
-    case 'select_or_other_sort':
       if (!empty($variables['option']) && $variables['option'] == 'option_none') {
         $output = t('- None -');
       }
