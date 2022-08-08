@@ -16,7 +16,7 @@ function select_or_other_install() {
     ->condition('name', 'text', '=')
     ->execute()
     ->fetchField();
-  
+
   db_update('system')
     ->fields(array('weight' => $weight + 1))
     ->condition('type', 'module')
@@ -25,20 +25,8 @@ function select_or_other_install() {
 }
 
 /**
- * Increase the module weight.
- *
- * @see select_or_other_install()
+ * Implement hook_update_last_removed().
  */
-function select_or_other_update_7201() {
-  $weight = db_select('system', 's')
-    ->fields('s', array('weight'))
-    ->condition('name', 'text', '=')
-    ->execute()
-    ->fetchField();
-  
-  db_update('system')
-    ->fields(array('weight' => $weight + 1))
-    ->condition('type', 'module')
-    ->condition('name', 'select_or_other')
-    ->execute();
+function select_or_other_update_last_removed() {
+  return 7201;
 }
